@@ -1,0 +1,163 @@
+CREATE DATABASE IF NOT EXISTS unas;
+USE unas;
+
+CREATE TABLE relacion_laboral(
+id_relacion_laboral INT(1) PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(25) 
+);
+
+CREATE TABLE ciudades (
+id_ciudades INT(5) PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(25)
+);
+
+CREATE TABLE barrios(
+id_barrios INT(5) PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(25)
+);
+
+CREATE TABLE direcciones(
+id_direcciones INT(3) PRIMARY KEY AUTO_INCREMENT,
+calle VARCHAR(25),
+altura INT(6),
+codigoPostal VARCHAR(15),
+id_barrios INT(5),
+id_ciudades INT(5),
+FOREIGN KEY(id_barrios) REFERENCES barrios(id_barrios),
+FOREIGN KEY (id_ciudades) REFERENCES ciudades(id_ciudades)
+);
+
+CREATE TABLE empleados(
+id_empleado INT(3) PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(25),
+apellido VARCHAR(25),
+telefono VARCHAR(25),
+mail VARCHAR(25),
+dni INT(10),
+id_direcciones INT(3),
+id_relacion_laboral INT(1),
+FOREIGN KEY(id_direcciones) REFERENCES direcciones(id_direcciones),
+FOREIGN KEY (id_relacion_laboral) REFERENCES relacion_laboral(id_relacion_laboral),
+fecha_nacimiento DATETIME
+);
+
+CREATE TABLE redes_sociales(
+id_redesSociales INT(2) PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(25)
+);
+
+CREATE TABLE clientes(
+id_clientes INT(3) PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(25),
+apellido VARCHAR(25),
+apodo VARCHAR(25),
+mail VARCHAR(25),
+FechaNacimiento DATETIME,
+telefono VARCHAR(25),
+id_direcciones INT(3),
+puntos INT(3),
+observaciones VARCHAR(25),
+ocupacion VARCHAR(25),
+id_redesSociales INT(2),
+FOREIGN KEY (id_direcciones) REFERENCES direcciones(id_direcciones),
+FOREIGN KEY (id_redesSociales) REFERENCES redes_sociales(id_redesSociales)
+);
+
+CREATE TABLE servicios(
+id_servicio INT (3) PRIMARY KEY AUTO_INCREMENT,
+nombre_servicio VARCHAR (30),
+precio FLOAT(5),
+puntos INT(3),
+id_clientes INT(3),
+FOREIGN KEY(id_clientes) REFERENCES clientes(id_clientes)
+);
+
+CREATE TABLE IF NOT EXISTS sucursales(
+id_sucursal INT(2) PRIMARY KEY AUTO_INCREMENT,
+id_direcciones INT(3),
+id_empleado INT(3),
+FOREIGN KEY(id_direcciones) REFERENCES direcciones(id_direcciones),
+FOREIGN KEY(id_empleado) REFERENCES empleados(id_empleado)
+);
+
+CREATE TABLE IF NOT EXISTS meses(
+id_meses INT(2) PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(26)
+);
+
+CREATE TABLE IF NOT EXISTS dias(
+id_dias INT(1) PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(25)
+);
+
+CREATE TABLE IF NOT EXISTS horas(
+id_horas INT(2) PRIMARY KEY AUTO_INCREMENT,
+hora INT(2),
+minutos INT(2)
+);
+
+CREATE TABLE IF NOT EXISTS horarios(
+id_horarios INT(5) PRIMARY KEY AUTO_INCREMENT,
+año INT(6),
+id_meses INT(2),
+id_dias INT(1),
+id_horas INT(2),
+FOREIGN KEY(id_meses) REFERENCES meses(id_meses),
+FOREIGN KEY(id_dias) REFERENCES dias(id_dias),
+FOREIGN KEY(id_horas) REFERENCES horas(id_horas)
+); 
+
+CREATE TABLE IF NOT EXISTS turnos(
+id_turno INT(4) PRIMARY KEY AUTO_INCREMENT,
+id_empleado INT(3),
+id_clientes INT(3),
+id_servicio INT(3),
+id_horarios INT(5),
+id_sucursal INT(2),
+FOREIGN KEY(id_empleado) REFERENCES empleados(id_empleado),
+FOREIGN KEY(id_clientes) REFERENCES clientes(id_clientes),
+FOREIGN KEY(id_servicio) REFERENCES servicios(id_servicio),
+FOREIGN KEY(id_horarios) REFERENCES horarios(id_horarios),
+FOREIGN KEY(id_sucursal) REFERENCES sucursales(id_sucursal)
+);
+
+/* Lo siguiente son modificaciones que se hicieron 
+sobre nombres y tipo de datos de algunos atributos */
+
+CREATE TABLE datos_personales (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  fecha_de_cumpleanos DATE
+);
+
+
+CREATE TABLE datos_personalesx (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  fecha_de_cumpleanos DATE
+);
+
+CREATE TABLE datos_personaless (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  fecha_de_cumpleanos DATE
+);
+
+ALTER TABLE empleados
+MODIFY fecha_nacimiento DATE;
+
+DESCRIBE empleados;
+
+DROP TABLE datos_personalesx;
+DROP TABLE datos_personales;
+DROP TABLE datos_personaless;
+
+ALTER TABLE nombre_de_la_tabla CHANGE nombre_columna_actual nombre_nuevo_columna tipo_de_dato;
+
+ALTER TABLE clientes CHANGE FechaNacimiento fecha_nacimiento DATE;
+
+DESCRIBE clientes;
+
+ALTER TABLE clientes CHANGE prueba jorge INT(4);
+
+ALTER TABLE clientes CHANGE jorge fecha_nacimiento DATE;
